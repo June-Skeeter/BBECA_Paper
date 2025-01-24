@@ -1,0 +1,146 @@
+---
+title: "Projecting Future Carbon Storage and Greenhouse Gas Emissions at Burns Bog Ameriflux Sites"
+author:
+  - name: June Skeeter
+    affiliations:
+      - ref: GSC
+      - ref: UBC
+  - name: Yeonuk Kim
+    affiliations:
+      - ref: UBC
+  - name: Sara Knox
+    affiliations:
+      - ref: MG
+      - ref: UBC
+  - name:  Mark Johnson
+    affiliations:
+      - ref: UBC
+  - name:  Marcus Merkins
+    affiliations:
+      - ref: MV
+affiliations:
+  - id: GSC
+    name: Geologic Survey of Canada
+    city: Vancouver
+    region: BC
+    country: CA
+  - id: UBC
+    name: University of British Columbia
+    city: Vancouver
+    region: BC
+    country: CA
+  - id: MG
+    name: McGill University
+    city: Montreal
+    region: QC
+    country: CA
+  - id: MV
+    name: Metro Vancouver
+    city: Vancouver
+    region: BC
+    country: CA
+format: 
+  pdf:
+    output-file: "BBECA_Paper_Draft"
+    output-ext:  "pdf"
+  docx:
+    output-file: "BBECA_Paper_Draft"
+    output-ext:  "docx"
+bibliography: references.bib
+---
+
+## Abstract
+
+An evaluation of the impacts of climate change on greenhouse gas emissions and carbon storage potential in the Burns Bog Ecological Conservancy Area (BBECA) was conducted using Eddy Covariance data, climate projections, and machine learning model.  The models were trained on relationships between Carbon Dioxide and Methane fluxes and key flux drivers observed at two Eddy Covariance stations in the BBECA between 2015 and 2024.  One station has been actively restored via ditch blocking while the other has been left to passively restore.  The trained models were fed future estimates of flux drives down-scaled from daily climate projections through 2100 to forecast the long-term impacts of climate warming on Carbon Dioxide and Methane fluxes at the two sites.  Currently the actively restored site is a net carbon sink and the passively restored site is a net carbon source.  The analysis suggests warming will have minimal impact on rates of Carbon Dioxide uptake at the actively restored site and will cause a significant increase in Carbon Dioxide emissions at the passively restored site.  Warming is expected to increase Methane emissions at both sites.  In terms of net Carbon fluxes the actively and passively restored sites are expected to become a stronger Carbon sink and source respectively.
+
+## Introduction
+
+Peatlands are an important component of the global carbon cycle.  They account for roughly 3% of terrestrial ecosystems but are estimated to store over 20% of terrestrial soil carbon (@xu_peatmap_2018, @leifeld_underappreciated_2018).  Peatlands serve as both sinks and sources for greenhouse gasses (GHG) and they have a complex, non-linear impact on the global climate system (@frolking_how_2006).  In their natural state, peatlands tend to be sinks for atmospheric carbon dioxide ($CO_2$) and sources of atmospheric methane ($CH_4$) respectively.  On a per unit mass basis, $CH_4$ has a substantially higher radiative forcing than $CO_2$ (@smith_global_2000).  However, rates of $CO_2$ uptake generally exceed rates of $CH_4$ emission and over millennial timescales the sustained sequestration of atmospheric $CO_2$ is sufficient to produce a net negative (cooling) radiative forcing (@frolking_how_2006).
+
+Peat harvesting operations and the drainage ditches that accompany them lower the water table in peatlands which accelerates peat decomposition and produces $CO_2$ emissions that contribute to climate change. Previous research has shown that restoration in previously harvested peatlands can help restore ecosystem health, reduce $CO_2$ emissions, and increase carbon storage (e.g., @knox_agricultural_2015, @rowland_effectiveness_2021, @nyberg_impacts_2022). However, the effects of climate change on restored peatlands remains uncertain and merits further investigation.  Maintaining ecological conditions supportive of healthy peatland ecosystems that are capable of continuing to sequester carbon may become challenging as the predicted warming climate dries out these important wetlands.
+
+In this study we forecast fluxes of $CO_2$ and $CH_4$ through 2100 for two Eddy Covariance (EC) sites in a temperate coastal peatland which was the site of intense harvesting in the mid 1900's.  One site has since undergone active restoration via ditch blocking to raise the water table while the other has been left to recover passively.  We use thirteen site-years of flux and biometeorological data along with empirical models and climate projections to train machine learning models and project estimates of $CO_2$ and $CH_4$ fluxes and soil temperature and water tale depth at the sites through the end of the century.  We show that active restoration via ditch blocking is expected to support a peatland environment which is more resilient to the impacts of climate warming.  We discuss projections of both net carbon balance ($C = CO_2 + CH_4$) and net GHG balance ($GHG = CO_2 + \alpha CH_4$) where $\alpha$ accounts for the higher sustained global warming potential (SGWP) of $CH_4$.
+
+## Data & Methods
+
+### Study Site
+
+Burns Bog is a raised peat bog in the municipality of Delta, BC, Canada. The bog originally covered approximately 48 $km^2$, but agricultural, industrial and transportation route development have significantly reduced its extent; much of the remaining bog area was used for peat extraction between then 1940s and 1980s(@hebda_burns_2000).  Drainage and peat extraction drastically altered the hydrology, ecology, and carbon balance of the bog (@hebda_burns_2000; @noauthor_burns_2007).  The Burns Bog Ecological Conservancy Area (BBECA), was established in 2004 to protect a large portion (~20 km2) of Burns Bog.  The BBECA hosts a diverse collection of vegetation types, with Pine-Sphagnum and Beakrush-Sphagnum being the dominant vegetation units (@BBECAMap).  
+
+Management of the BBECA is guided by the 2007 BBECA Management Plan.  The scientific objectives of the plan are to return the bog to a condition shaped by raised bog processes, buffered from disturbing processes such as climate change, fire, and urban development over a timeframe of 100 years (@noauthor_burns_2007).  Since the BBECA was established, one of the primary active restoration strategies pursued has been rewetting, using dams and weirs to block drainage ditches. The aim is to rewet peatland in the BBECA to the greatest extent possible and manage hydrological conditions so that healthy peatland function can be restored which will ultimately promote Sphagnum growth and peat accumulation (@noauthor_burns_2007).  
+
+### Ameriflux data Data
+
+In 2014, the UBC Micrometeorology group and Metro Vancouver Regional Parks installed an eddy covariance (EC) station in a peatland site (BB1) that was rewetted via ditch blocking in 2007. In 2019 a second station was installed (BB2), at a site that has been left to recover passively through natural unaided processes. Both EC stations are equipped with a CSAT3 sonic anemometer along with a LI-7200 and LI-7700 to measure $CO_2$ and $CH_4$ respectively.  Additionally, the stations monitor biometeorological data including four-component radiation, air temperature and humidity, soil temperature profiles, and water table depth.
+
+[Vegetation community mapping associated with the Burns Bog Ecological Conservancy Area as established during the Burns Bog Ecosystem Review (1999).](figures/BBECA_Map.png){#fig-BBECAMap}
+
+High frequency (20 Hz) EC data were processed in EddyPro to calculate half-hourly fluxes of sensible ($H$) and latent heat ($LE$) along with $CO_2$ ($F_CO2$) and $CH_4$ ($$F_CH4$) (@li-cor_inc_eddypro_2021).  EddyPro's default settings were applied to the data where appropriate, except the low-pass spectral correction of @fratini_relative_2012 was used instead of @moncrieff_system_1997 because it is more appropriate for closed-path systems in humid environments.  Half-hourly data data from the two sites were processed using a standardize processing pipeline (**Add a citation link biomet.net**) 
+
+Bio-climate data were filtered and gap-filled following the standardized procedures in the Biomet.Net pipeline, with the exception of $W_TD$ which required additional corrections.  Bog breathing
+
+### Climate Data
+
+XX/YY resolution data for a "business as usual" scenario through 2100 were used here ..?
+
+### Modelling
+
+* @fig-flowchart gives a schematic representation of the modelling routine. (I think this is a nice figure, but we can adjust or remove as needed)
+
+* In situ biometeorological data (H, LE, $W_TD$, $T_s$) and down-scaled climate model data (TA, Precip) coinciding with the period of observation were used to parameterize empirical models to project daily resolution $W_TD$ and $T_s$ at BB1 & BB2 through 2100.
+
+* Machine learning models were trained on observed daily $F_CO2$ and $F_CH4$ modeled $W_TD$ and $T_s$ for both sites.  These models were then used to project daily $F_CO2$ and $F_CH4$ through 2100.
+
+[Flowchart of modelling routine](/figures/flowchart.png){#fig-flowchart}
+
+## Results & Discussion (keep merged or split sections?)
+
+### Climate Data
+
+*Would be good to have a summary of the downscale climate projections here.*  Projections of $T_s$ indicate a 5 $^\circ C$ rise in mean annual soil temperatures (at 5cm?) can be expected by 2100 at both BB1 and BB2 (@fig-TS).  Projections $W_TD$ indicate a substantial decrease of - 10cm in dry-season $W_TD$ at BB2, while BB1 sees a much more muted reduction of -2cm (@fig-WTD).  **Discussion point** This is attributable to both the effects of ditch blocking the structural/vegetative differences between the between the two sites.
+
+[Projections of the mean-annual course of late 21st century (2080-2100?) daily TS compared to current observed and current modelled values](/figures/TS_est.png){#fig-TS}
+
+[Projections of the mean-annual course of late 21st century (2080-2100?) daily WTD compared to current observed and current modelled values](/figures/WTD_est.png){#fig-WTD}
+
+### GHG Fluxes
+
+The model projections suggest that the wetter, actively restored BB1 site will experience enhanced annual $CO_2$ uptake **insert estimate here** by the end of the century while the drier BB2 site is projected to see a substantial increase in $CO_2$ emissions **insert estimate here** (@fig-FCO2).  The increase in $CO_2$ uptake at BB1 attributable to a net-extension of the growing season.  The increase in $CO_2$ emissions at BB2 are 
+
+Rates of summertime $CO_2$ uptake are reduced slightly below current levels due to the anticipated modest reduction dry season $W_TD$.  
+
+[Projections of the mean-annual course of late 21st century (2080-2100?) daily $F_CO2$ compared to current observed and current modelled values](/figures/FCO2_est.png){#fig-FCO2}
+
+[Projections of the mean-annual course of late 21st century (2080-2100?) daily $F_CH4$ compared to current observed and current modelled values](/figures/FCH4_est.png){#fig-FCH4}
+
+[Projections of the mean yearly $F_CO2$ for late 21st century (2080-2100?) compared to current observed and current modelled values](/figures/FCO2_est.png){#fig-FCO2}
+
+[Projections of the mean yearly $F_CH4$ for late 21st century (2080-2100?) compared to current observed and current modelled values](/figures/FCH4_est.png){#fig-FCH4}
+
+
+
+## Conclusions
+
+Actively Rewetted BB1:
+Currently a carbon sink, projected to strengthen as a carbon sink in the future.
+Passively Rewetted BB2:
+Currently a carbon source, expected to become a stronger carbon source over time.
+Net Greenhouse Gas Balance (CO₂ Equivalent):
+BB1 currently emits more greenhouse gases due to higher methane emissions.
+This trend will reverse in the future as CO₂ uptake increases and methane emissions stabilize.
+Recommendation:
+Active rewetting is the preferred strategy for enhancing long-term carbon storage.
+Though initially associated with higher methane emissions, it ultimately leads to net greenhouse gas reduction in the future.
+
+
+Counteracting the negative effects of climate change on greenhouse gas emissions can be achieved through peatland restoration. In addition, expanding rewetted areas may help offset the influence of drought on the BBECA. When, where and how to effectively restore compromised areas within the BBECA requires careful consideration in order to meet the goals of the BBECA Management Plan while also contributing to regional climate change mitigation. An in-depth analysis will allow Metro Vancouver to determine the net influence of management actions on long-term greenhouse gas exchange and carbon storage in the BBECA. This will help inform what management steps will best ensure the BBECA remains resilient in the face of warming induced changes. 
+
+This project will develop neural network models including parameters such as soil conditions and climate projections (Figure 2 below). Neural networks are a powerful type of machine learning model that operate in a manner similar to the human brain. They learn from experience, are capable of learning patterns in large complex datasets, and can make predictions using new input data. The neural network model will be used to analyze various climate and management scenarios and their influence on greenhouse gas exchange.
+
+
+## References
+
+
+::: {#refs}
+:::
+
